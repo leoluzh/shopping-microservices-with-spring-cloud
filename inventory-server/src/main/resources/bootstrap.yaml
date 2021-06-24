@@ -1,0 +1,44 @@
+spring:
+  application:
+    name: inventory-service
+
+  cloud:
+    vault:
+      application-name: inventory-service
+      port: 8200
+      scheme: http
+      authentication: token
+      token: <put-token-here>
+    config:
+      uri: http://localhost:8888
+  datasource:
+    username: root
+    password: mysql
+  zipkin:
+    base-url: http://localhost:9411/
+  sleuth:
+    sampler:
+      probability: 1
+  rabbitmq:
+    host: localhost
+    port: 5672
+    username: guest
+    password: guest
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: http://localhost:8180/auth/realms/shopping-microservices-realm
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: *
+
+server:
+  port: 0
+
+eureka:
+  instance:
+    instance-id: ${spring.application.name}:${random.uuid}
