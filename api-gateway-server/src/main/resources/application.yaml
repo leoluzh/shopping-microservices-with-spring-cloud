@@ -1,0 +1,40 @@
+spring:
+  application:
+    name: api-gateway
+
+  cloud:
+    gateway:
+      discovery:
+        locator:
+          enabled: true
+          lower-case-service-id: true
+      default-filters: TokenRelay
+      routes:
+        - id: product-service
+          uri: lb://product-service
+          predicates:
+            - Path=/api/v1/products/**
+        - id: order-service
+          uri: lb://order-service
+          predicates:
+            Path=/api/v1/orders/**
+  security:
+    oauth2:
+      client:
+        provider:
+          keycloak:
+            issuer-uri: http://localhost:8180/auth/realms/shopping-microservices-realm
+        registration:
+          spring-cloud-gateway-client:
+            client-id: shopping-microservices-gateway-client
+            client-secret:
+            provider: keycloak
+            authorization-grant-type: authorization_code
+            redirect-uri: http://localhost:8080/login/oauth2/code/shopping-microservices-gateway-client
+      resourceserver:
+        jwt:
+          jwk-set-uri: http://localhost:8180/auth/realms/shopping-microservices-realm/protocol/openid-connect/certs
+
+eureka:
+  instance:
+    instance-id: ${spring.application.name}-${random.uuid}
