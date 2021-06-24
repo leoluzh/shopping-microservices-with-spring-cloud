@@ -57,8 +57,8 @@ public class ProductService {
 
     public ProductDto update(final String id, final ProductDto productDto) throws ProductNotFoundException {
         final var product = verififyIfExists(id);
-        final var product = productMapper.toEntity(productDto);
-        final var result= this.productRepository.save(product);
+        productMapper.update(productDto,product);
+        var result = productRepository.save(product);
         return productMapper.toDto(result);
     }
 
