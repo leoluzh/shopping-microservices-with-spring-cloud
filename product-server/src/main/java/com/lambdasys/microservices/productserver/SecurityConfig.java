@@ -14,7 +14,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Bean
     public void configure(final HttpSecurity httpSecurity) throws Exception {
         httpSecurity.authorizeRequests(authorize -> authorize.anyRequest().authenticated())
-                .oauth2Client(OAuth2ResourceServerConfigurer::jwt);
+                .oauth2ResourceServer(OAuth2ResourceServerConfigurer::jwt);
     }
 
 }
