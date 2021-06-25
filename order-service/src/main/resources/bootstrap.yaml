@@ -1,0 +1,55 @@
+spring:
+  application:
+    name: order-service
+  cloud:
+    config:
+      uri: http://localhost:8888
+    loadbalancer:
+      enabled: true
+    vault:
+      host: localhost
+      port: 8200
+      scheme: http
+      authentication: token
+      application-name: order-service
+      token: <put-token-here>
+    stream:
+      source: notificationEventSupplier
+      bindings:
+        notificationEventSupplier-out-0:
+          destination: notification-events
+  rabbitmq:
+    host: localhost
+    port: 5672
+    username: guest
+    password: guest
+  datasource:
+    username: root
+    password: mysql
+  sleuth:
+    integration:
+      enabled: true
+    sampler:
+      probability: 1
+    circuitbreaker:
+      enabled: true
+  zipkin:
+    base-url: http://localhost:9411/
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: http://localhost:8180/auth/realms/shopping-microservices-realm
+
+server:
+  port: 0
+
+eureka:
+  instance:
+    instance-id: ${spring.application.name}:${random.uuid}
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: *
