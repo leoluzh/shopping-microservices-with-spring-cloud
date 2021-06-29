@@ -1,0 +1,117 @@
+version: '3.3'
+
+services:
+
+  vault:
+    image: vault:latest
+    restart: always
+    ports:
+      - 8200:8200
+    environment:
+      - VAULT_ADDR=http://0.0.0.0:8200
+      - VAULT_API_ADDR=http://0.0.0.0:8200
+      - VAULT_ADDRESS= http://0.0.0.0:8200
+      - VAULT_DEV_ROOT_TOKEN_ID='p9ySCyRaHXUhQQAw3PgkQhSvoe+mexRlZGILDi2ieLji'
+    volumes:
+      - type: volume
+        source: vault_config
+        target: /vault/config
+      - type: volume
+        source: vault_policies
+        target: /vault/policies
+      - type: volume
+        source: vault_data
+        target: /vault/data
+    cap_add:
+      - IPC_LOCK
+    entrypoint: vault server -config=/vault/config/vault-config.json
+    networks:
+      - shopping-network
+
+  postgres:
+    image: postgres:latest
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-postgres}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-changeme}
+      PGDATA: /data/postgres
+    ports:
+      - "5432:5432"
+    networks:
+      - shopping-network
+    volumes:
+      - ./scripts/db/postgres/init.sql:/docker-entrypoint-initdb.d/init.sql
+      - postgres_data:/data/postgres
+    restart: unless-stopped
+
+  pgadmin:
+    image: dpage/pgadmin4:latest
+    links:
+      - postgres
+    environment:
+      PGADMIN_DEFAULT_EMAIL: ${PGADMIN_DEFAULT_ADMIN:-pgadmin4@pgamin.org}
+      PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_DEFAULT_PASSWORD:-admin}
+    volumes:
+      - pgadmin_data:/root/.pgadmin
+    restart: always
+    ports:
+      - "${PGADMIN_PORT:-8081}:80"
+    networks:
+      - shopping-network
+    depends_on:
+      - postgres
+
+  mongo:
+    image: mongo:latest
+    restart: always
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: admin
+      MONGO_INITDB_ROOT_PASSWORD: admin
+    volumes:
+      - type: volume
+        source: mongo_data
+        target: /data/db
+      - type: volume
+        source: mongo_config
+        target: /data/configdb
+    networks:
+      - shopping-network
+
+  mongo-express:
+    image: mongo-express:latest
+    restart: always
+    ports:
+      - 8081:8081
+    environment:
+      ME_CONFIG_BASICAUTH_USERNAME: mongousr
+      ME_CONFIG_BASICAUTH_PASSWORD: mongopwd
+      ME_CONFIG_MONGODB_PORT: 27017
+      ME_CONFIG_MONGODB_ADMINUSERNAME: admin
+      ME_CONFIG_MONGODB_ADMINPASSWORD: admin
+    links:
+      - mongo
+    depends_on:
+      - mongo
+    networks:
+      - shopping-network
+
+networks:
+  shopping-network:
+    driver: bridge
+
+volumes:
+  mongo_data:
+    name: mongo_data
+  mongo_config:
+    name: mongo_config
+  vault_data:
+    name: vault_data
+  vault_config:
+    name: vault_config
+  vault_policies:
+    name: vault_policies
+  postgres_data:
+    name: postgres_data
+  pgadmin_data:
+    name: pgadmin_data
+
+
