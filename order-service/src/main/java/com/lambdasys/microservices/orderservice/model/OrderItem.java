@@ -14,14 +14,15 @@ import java.math.BigDecimal;
 @ToString
 
 @Entity
-@Table(name = "order_itens")
-public class OrderItens implements Serializable {
+@Table(name = "orders_itens")
+public class OrderItem implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @EqualsAndHashCode.Include
     private Long id;
     private String sku;
+    @Column(scale =12,precision =4)
     private BigDecimal price;
     private Integer quantity;
 
