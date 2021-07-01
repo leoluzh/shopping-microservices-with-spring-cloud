@@ -20,6 +20,11 @@
 		<spring-native.version>0.10.0</spring-native.version>
 	</properties>
 	<dependencies>
+		<!-- actuator -->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-actuator</artifactId>
+		</dependency>
 		<!-- oauth2 client -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
