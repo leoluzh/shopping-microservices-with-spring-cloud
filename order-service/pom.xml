@@ -19,6 +19,7 @@
 		<spring-cloud.version>2020.0.3</spring-cloud.version>
 		<spring-native.version>0.10.0</spring-native.version>
 		<logstash-logback-encoder.version>6.6</logstash-logback-encoder.version>
+		<mapstruct.version>1.4.2.Final</mapstruct.version>
 	</properties>
 	<dependencies>
 		<!-- actuator -->
@@ -112,6 +113,12 @@
 			<artifactId>mysql-connector-java</artifactId>
 			<scope>runtime</scope>
 		</dependency>
+		<!-- postgres -->
+		<dependency>
+			<groupId>org.postgresql</groupId>
+			<artifactId>postgresql</artifactId>
+			<scope>runtime</scope>
+		</dependency>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-configuration-processor</artifactId>
@@ -122,6 +129,17 @@
 			<groupId>org.projectlombok</groupId>
 			<artifactId>lombok</artifactId>
 			<optional>true</optional>
+		</dependency>
+		<!-- mapstruct -->
+		<dependency>
+			<groupId>org.mapstruct</groupId>
+			<artifactId>mapstruct</artifactId>
+			<version>${mapstruct.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.mapstruct</groupId>
+			<artifactId>mapstruct-processor</artifactId>
+			<version>${mapstruct.version}</version>
 		</dependency>
 		<!-- security -->
 		<dependency>
