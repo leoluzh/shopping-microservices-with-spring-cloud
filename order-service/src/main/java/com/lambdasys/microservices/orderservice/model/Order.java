@@ -2,9 +2,9 @@ package com.lambdasys.microservices.orderservice.model;
 
 import lombok.*;
 
-import javax.annotation.processing.Generated;
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -26,6 +26,7 @@ public class Order implements Serializable {
     private String orderNumber;
 
     @OneToMany(cascade = CascadeType.ALL)
-    private List<OrderItens> orderItens;
+    @Builder.Default
+    private List<OrderItem> orderItens = new ArrayList<>();
 
 }
