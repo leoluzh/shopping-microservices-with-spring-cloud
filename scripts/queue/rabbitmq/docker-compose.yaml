@@ -1,0 +1,27 @@
+version: '3.1'
+
+services:
+
+  rabbitmq:
+    image: rabbitmq:3-management
+    hostname: rabbitmq
+    ports:
+      - 5672:5672
+      - 15672:15672
+    volumes:
+      - ./definitions.json:/etc/rabbitmq/definitions.json:ro
+      - ./rabbitmq.config:/etc/rabbitmq/rabbitmq.config:ro
+      - rabbitmq_data:/var/lib/rabbitmq/
+      - rabbitmq_logs:/var/log/rabbitmq/
+    networks:
+      - shopping-network
+
+volumes:
+  rabbitmq_data:
+    name: rabbitmq_data
+  rabbitmq_logs:
+    name: rabbitmq_logs
+
+networks:
+  shopping-network:
+    driver: bridge
